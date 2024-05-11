@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useTodo } from "../context";
+import Button from "./Button";
+import Input from "./Input";
 
 function TodoForm() {
 
@@ -18,17 +20,20 @@ function TodoForm() {
 
 
     return (
-        <form onSubmit={add}  className="flex">
-            <input
+        <form onSubmit={add} className="flex">
+            <Input
                 type="text"
                 placeholder="Write Todo..."
-                className="w-full border border-black/10 rounded-l-lg px-3 outline-none duration-150 bg-white/20 py-1.5"
                 value={todo}
-                onChange={(e) => setTodo(e.target.value)}
+                className="w-full border border-black/10 rounded-l-lg px-3 outline-none duration-150 bg-white/20 py-1.5"
+                onInputChange={(current) => setTodo(current)}
             />
-            <button type="submit" className="rounded-r-lg px-3 py-1 bg-green-600 text-white shrink-0">
-                Add
-            </button>
+            <div className="ml-3">
+                <Button
+                    text="Add"
+                    className="rounded-r-lg px-3 py-2 bg-green-600 text-white shrink-0"
+                />
+            </div>
         </form>
     );
 }

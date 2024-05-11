@@ -1,5 +1,8 @@
 import { useState } from "react"; 
 import { useTodo } from "../context";
+import Input from "./Input";
+import Button from "./Button";
+import Checkbox from "./Checkbox";
 
 function TodoItem({ todo }) {
 
@@ -7,6 +10,7 @@ function TodoItem({ todo }) {
 
     const [isEditable, setIsEditable] = useState(false);
     const [textMsg, setTextMsg] = useState(todo.todo); 
+    const [show, setShow] = useState(false); 
 
     const editTodo = () => { 
         updateTodo(todo.id, { ...todo, todo: textMsg });
@@ -15,24 +19,29 @@ function TodoItem({ todo }) {
  
     return (
         <div
-            className={`flex border border-black/10 rounded-lg px-3 py-1.5 gap-x-3 shadow-sm shadow-white/50 duration-300  text-black ${todo.completed?"bg-[#c6e9a7]":"bg-[#ccbed7]"}`}
+            onMouseEnter={() => setShow(true)}
+            onMouseLeave={() => setShow(false)}
+            className={`hover:${!show} flex border border-black/10 rounded-lg px-3 py-1.5 gap-x-3 shadow-sm shadow-white/50 duration-300  text-black ${todo.completed?"bg-[#c6e9a7]":"bg-[#ccbed7]"}`}
         >
-            <input
+            
+            <Checkbox
                 type="checkbox"
                 className="cursor-pointer"
                 checked={todo.completed}
                 onChange={()=>toggleCompleted(todo.id)}
             />
-            <input
+
+            <Input
                 type="text"
                 className={`border outline-none w-full bg-transparent rounded-lg ${isEditable?"border-black/10 px-2":"border-transparent"} ${todo.completed?"line-through":""} `}
                 value={textMsg}
-                onChange={(e)=>setTextMsg(e.target.value)}
+                onInputChange={(current)=>setTextMsg(current)}
                 readOnly={!isEditable}
             />
-            {/* Edit, Save Button */}
-            <button
-                className="inline-flex w-8 h-8 rounded-lg text-sm border border-black/10 justify-center items-center bg-gray-50 hover:bg-gray-100 shrink-0 disabled:opacity-50"
+
+            {/* Edit, Save Button */} 
+            <Button
+                className={`${show?"inline-flex":"hidden"} w-8 h-8 rounded-lg text-sm border border-black/10 justify-center items-center bg-gray-50 hover:bg-gray-100 shrink-0 disabled:opacity-50`}
                 onClick={() => {
                     if (todo.completed) return;
 
@@ -44,16 +53,15 @@ function TodoItem({ todo }) {
                     }
                 }}
                 disabled={todo.completed}
-            >
-                {isEditable?"📁":"✏️"}
-            </button>
+                text={isEditable?"📁":"✏️"}
+            /> 
+
             {/* Delete Todo Button */}
-            <button
-                className="inline-flex w-8 h-8 rounded-lg text-sm border border-black/10 justify-center items-center bg-gray-50 hover:bg-gray-100 shrink-0"
+            <Button
+                className={`${show?"inline-flex":"hidden"} w-8 h-8 rounded-lg text-sm border border-black/10 justify-center items-center bg-gray-50 hover:bg-gray-100 shrink-0`}
                 onClick={()=>removeTodo(todo.id)}
-            >
-                ❌
-            </button>
+                text="❌"
+            />
         </div>
     );
 }
